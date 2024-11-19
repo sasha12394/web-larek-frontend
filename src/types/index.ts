@@ -1,3 +1,5 @@
+export type PaymentType = 'card' | 'cash';
+
 export interface IProduct{
   _id: string;
   description: string;
@@ -5,35 +7,49 @@ export interface IProduct{
   title: string;
   category: string;
   price: number|null;
+  disabled: boolean;
+
 }
 export interface IOrder{
-  payment: string;
-  email: string;
-  phone: string;
-  address: string;
-  total: number;
-  items: string[];
+  payment?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  total?: number;
+  items?: string[];
 }
 
 export interface IProductData{
   products: IProduct[];
-  preview: string|null;
-  getProduct(cardId:string): IProduct;
+  preview: IProduct|null;
+  getProduct(productId:string): IProduct;
+  setProducts(products: IProduct[]): void;
+
 }
 
 export interface IBasket{
+  orderBasket: TProductBasket[];
   total: number|null;
 }
+export type TFormErrors = Partial<Record<keyof IOrder, string>>;
 
-export interface IOrderData{
-setOrder(orderData: IOrder): void;
-checkOrderStartValidation (data: (Record<keyof TOrderStart, string>)):boolean;
-checkOrderEndValidation (data: (Record<keyof TOrderEnd, string>)):boolean;
+export interface IOrderData {
+	formErrors: TFormErrors;
+	order: IOrder;
+	setOrderPayment(value: string): void;
+	setOrderEmail(value: string): void;
+
+	setOrderField(field: keyof IOrder, value: IOrder[keyof IOrder]): void;
+	validateOrder(): boolean;
+	clearOrder(): void;
 }
-
+export type TOrderInput = Pick<
+	IOrder,
+	'payment' | 'address' | 'email' | 'phone'
+>;
 export type TProductModal = Pick<IProduct, 'description'|'image'|'title'|'category'|'price'>
+export type TProductBasket = Pick<IProduct, '_id'| 'title'|'price'>
 export type TBasket = Pick<IOrder, 'total'|'items'>
 export type TOrderStart = Pick<IOrder, 'payment'|'address'>
 export type TOrderEnd = Pick<IOrder, 'phone'|'email'>
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;

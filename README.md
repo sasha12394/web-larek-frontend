@@ -143,7 +143,8 @@ export type TOrderEnd = Pick<IOrder, 'phone'|'email'>
 - _preview: string | null - id товара, выбранного для просмотра в модальном окне
 
 Так же класс представляет набор методов для взаимодействия с этими данными.
-- getProduct(cardId:string): IProduct - возвращает карточку по её id
+- getProduct(productId:string): IProduct - возвращает карточку по её id
+setProducts(products: IProduct[]): void - получат массив карточек для вывода на страницу
 - а так же сеттеры и геттеры для сохранения и получения данных из полей класса
 
 #### Класс OrderData
@@ -161,9 +162,12 @@ export type TOrderEnd = Pick<IOrder, 'phone'|'email'>
 
 Так же класс представляет набор методов для взаимодействия с этими данными.
 
-- setOrder(orderData: IOrder): void - сохраняет данные заказа в классе
-- checkOrderStartValidation (data: (Record<keyof TOrderStart, string>)):boolean - проверяет объект с данными заказа на валидность
-- checkOrderEndValidation (data: (Record<keyof TOrderEnd, string>)):boolean - проверяет объект с данными заказа на валидность
+- setOrderStart(orderData: TOrderStart, value: string) - сохраняет данные заказа в классе
+- setOrderEnd(orderData: TOrderEnd, value: string) - сохраняет данные заказа в классе
+- setOrderStartField(field: keyof TOrderStart, value: string) -обновляет любое поле заказа и инициирует валидацию.
+- setOrderEndField(field: keyof TOrderEnd, value: string) -обновляет любое поле заказа и инициирует валидацию.
+validateOrder():boolean - проверяет объект с данными заказа на валидность
+
 
 ### Классы представления
 Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных
@@ -249,6 +253,7 @@ export type TOrderEnd = Pick<IOrder, 'phone'|'email'>
 - `basket:changed` - изменения в открываемом модельном окне корзины
 - `total-price:changed` - изменения общей цены заказа
 - `basket-number:changed` - изменение колличества товаров в корзине на главной странице
+- `product:change` - изменение массива карточек продукта
 
 *События, возникающие при взаимодействии пользователя с интерфейсом (генерируется классами, отвечающими за представление)*
 - `basket:open` - открытие модального окна корзины
