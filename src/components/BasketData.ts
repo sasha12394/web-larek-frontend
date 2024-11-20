@@ -1,48 +1,47 @@
 import { IEvents } from './base/events';
-import { IOrderData, IBasket, TBasket, IOrder, IProduct, TProductBasket } from '../types/index';
+import { IBasket, IProduct, TProductBasket } from '../types/index';
 
 export class BasketData implements IBasket {
-  orderBasket :  TProductBasket[] = [];
-  total: 0;
-  constructor(protected events: IEvents) {
+	orderBasket: TProductBasket[] = [];
+	total: 0;
+	constructor(protected events: IEvents) {
 		this.events = events;
 	}
-  get basket(): TProductBasket[] {
-    return this.orderBasket
-  }
+	get basket(): TProductBasket[] {
+		return this.orderBasket;
+	}
 
 	addToBasket(product: TProductBasket) {
 		this.orderBasket.push(product);
-		this.events.emit('basket:open');
+		this.events.emit('basket:changed');
 	}
 
 	removeFromBasket(product: TProductBasket) {
-    this.orderBasket = this.orderBasket.filter(orderBasket => orderBasket !== product);
-		this.events.emit('basket:open');
+		this.orderBasket = this.orderBasket.filter(
+			(orderBasket) => orderBasket !== product
+		);
+		this.events.emit('basket:changed');
 	}
 
-getTotal() {
+	getTotal() {
+		return this.orderBasket
+			.filter((item) => item.price !== null) // Отфильтровываем элементы с null ценой
+			.reduce((sum, next) => sum + next.price, 0);
+	}
+	clearBasket() {
+		this.orderBasket = [];
+		this.events.emit('basket:changed');
+	}
+	getBasketLength() {
+		return this.orderBasket.length;
+	}
+	isInBasket(product: IProduct) {
+		return this.orderBasket.some((card) => card.id === product.id);
+	}
 
-return this.orderBasket.reduce((sum, next) => sum + next.price, 0);
-}
-
-clearBasket() {
-  this.orderBasket = []
-  this.events.emit('basket:open');
-}
-getBasketLength() {
-  return this.orderBasket.length;
-}
-isInBasket(product: IProduct) {
-  console.log(product)
-  console.log(this.orderBasket)
-	return this.orderBasket.some(card => card._id === product._id);
-}
-
-sendBasketToOrder(orderData: IOrderData) {
-  const orderItems = this.orderBasket.map((product) => product._id);
-
-  orderData.setOrderField('items', orderItems);
-  orderData.setOrderField('total', this.getTotal());
-}
+	getOrderId() {
+		return this.orderBasket
+			.filter((card) => card.price !== null) // Фильтруем продукты с ценой не null
+			.map((card) => card.id); // Получаем id отфильтрованных продуктов
+	}
 }
