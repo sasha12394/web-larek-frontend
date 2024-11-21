@@ -3,7 +3,6 @@ import { IBasket, IProduct, TProductBasket } from '../types/index';
 
 export class BasketData implements IBasket {
 	orderBasket: TProductBasket[] = [];
-	total: 0;
 	constructor(protected events: IEvents) {
 		this.events = events;
 	}
@@ -28,6 +27,7 @@ export class BasketData implements IBasket {
 			.filter((item) => item.price !== null) // Отфильтровываем элементы с null ценой
 			.reduce((sum, next) => sum + next.price, 0);
 	}
+	
 	clearBasket() {
 		this.orderBasket = [];
 		this.events.emit('basket:changed');

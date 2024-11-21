@@ -190,7 +190,6 @@ events.on('contacts:submit', () => {
       const success = new Success(cloneTemplate(orderSuccessTemplate), {
         onClick: () => {
           modal.close();
-          basketData.clearBasket();
           page.counter = basketData.orderBasket.length;
         }
       });
@@ -200,6 +199,7 @@ events.on('contacts:submit', () => {
 					total: basketData.getTotal()
         })
       })
+			basketData.clearBasket();
     })
     .catch(err => {
       console.error(err);

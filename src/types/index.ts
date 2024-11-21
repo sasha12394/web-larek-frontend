@@ -28,7 +28,6 @@ export interface IProductData{
 
 export interface IBasket{
   orderBasket: TProductBasket[];
-  total: number|null;
 }
 
 export type TFormErrors = Partial<Record<keyof IOrder, string>>;
